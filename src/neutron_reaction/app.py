@@ -1,7 +1,7 @@
 """Dash application for the nuclear data evaluation platform."""
 
-from .layout import serve_layout
-from .pages import home, select_nuclide
+from neutron_reaction.layout import serve_layout
+from neutron_reaction.pages import home, select_nuclide
 
 
 def interactive_message() -> str:

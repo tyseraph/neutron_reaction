@@ -2,5 +2,5 @@
 
 __all__ = ["sidebar"]
 
-from .sidebar import sidebar
+from neutron_reaction.component.sidebar import sidebar
 

@@ -1,6 +1,6 @@
 """Application layout that includes the sidebar and page container."""
 
-from .component.sidebar import sidebar
+from neutron_reaction.component.sidebar import sidebar
 
 
 def serve_layout():

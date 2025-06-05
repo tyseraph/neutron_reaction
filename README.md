@@ -10,12 +10,12 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 ## Getting Started
 
 1. Install the dependencies (if any).
-2. Run the Dash application:
-   ```bash
-   python -m neutron_reaction.app
-   ```
+2. Run the Dash application from the project root so that imports resolve correctly:
+```bash
+python -m neutron_reaction.app
+```
 
-   The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page.
+The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page. All modules now use absolute imports (e.g. `from neutron_reaction.layout import serve_layout`) to avoid issues when the application is executed directly or as a module.
 
 ## Directory Structure
 
