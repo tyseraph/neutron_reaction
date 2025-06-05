@@ -5,8 +5,8 @@ This repository aims to build an interactive nuclear data evaluation platform.
 ## Features
 - Interactive web application built with [Dash](https://dash.plotly.com/)
 - Multi-step workflow for nuclear data evaluation
-- A welcoming home page linking to platform introduction, workflow diagram,
-  and a quick-start video
+- A home page describing the platform's goals and main features
+- Navigation to nuclide selection, help, documentation, and additional pages
 - Basic test structure using `pytest`
 
 ## Getting Started
@@ -17,9 +17,9 @@ This repository aims to build an interactive nuclear data evaluation platform.
    python -m neutron_reaction.app
    ```
 
-   The application opens with a page titled `欢迎使用核数据智能评价平台` where
-   you can access the platform introduction, workflow diagram, and a quick-start
-   video, or immediately begin a new task.
+   The application opens with a page titled `核数据智能评价平台` that provides
+   an overview of the project goals, lists the main features, and offers links to
+   nuclide selection, help, documentation, and other sections of the site.
 
 ## Directory Structure
 
