@@ -1,12 +1,10 @@
 # Neutron Reaction
 
-This repository aims to build an interactive nuclear data evaluation platform.
+This repository aims to build an interactive nuclear data evaluation platform based on [Dash](https://dash.plotly.com/).
 
 ## Features
-- Interactive web application built with [Dash](https://dash.plotly.com/)
-- Multi-step workflow for nuclear data evaluation
-- A home page describing the platform's goals and main features
-- Navigation to nuclide selection, help, documentation, and additional pages
+- Interactive web application with a multi-step workflow
+- Separate modules for UI components and pages
 - Basic test structure using `pytest`
 
 ## Getting Started
@@ -17,14 +15,16 @@ This repository aims to build an interactive nuclear data evaluation platform.
    python -m neutron_reaction.app
    ```
 
-   The application opens with a page titled `核数据智能评价平台` that provides
-   an overview of the project goals, lists the main features, and offers links to
-   nuclide selection, help, documentation, and other sections of the site.
+   The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page.
 
 ## Directory Structure
 
-- `src/`: source code of the platform
-- `tests/`: unit tests
+- `src/neutron_reaction/`
+  - `app.py` – application entry point
+  - `layout.py` – top level layout including sidebar and page container
+  - `component/` – reusable UI components (e.g., sidebar)
+  - `pages/` – individual page layouts such as `home` and `select_nuclide`
+- `tests/` – unit tests
 
 ## License
 
