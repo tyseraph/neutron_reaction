@@ -15,43 +15,69 @@ def create_dash_app():
     app = dash.Dash(__name__, suppress_callback_exceptions=True)
 
     index_page = html.Div(
-        [
-            html.Div("[平台LOGO]", style={"textAlign": "center", "fontSize": "24px"}),
-            html.H1(
-                "核数据智能评价平台",
-                style={"textAlign": "center"},
-            ),
-            html.Hr(),
-            html.P(
-                "本平台旨在为核数据评价与理论建模提供高效、可视化、智能化的分析工具，支持多模型、多反应道实验数据的比对与拟合，适合科研与专业评价",
-                style={"textAlign": "center"},
-            ),
-            html.Ul(
+        style={"maxWidth": "820px", "margin": "auto", "padding": "32px"},
+        children=[
+            html.Div(
                 [
-                    html.Li("批量核素与反应道的可视化对比和数据管理"),
-                    html.Li("主流理论模型的一键拟合与参数优化"),
-                    html.Li("实验与评价数据自动筛选、目标数据定制"),
-                    html.Li("多类型输出与报告生成"),
+                    html.H1("核数据智能评价平台", style={"marginBottom": "0.2em"}),
+                    html.Hr(style={"marginBottom": "1em"}),
                 ]
             ),
             html.Div(
                 [
-                    dcc.Link("进入核素选择", href="/nuclide", style={"margin": "0 10px"}),
-                    dcc.Link("功能说明/帮助", href="/help", style={"margin": "0 10px"}),
-                    dcc.Link("文档", href="/docs", style={"margin": "0 10px"}),
+                    html.P(
+                        "本平台为核数据评价与理论建模的专业用户，提供高效的多模型、多反应道实验数据比对与理论拟合工具。"
+                        "支持大批量核素管理、目标数据处理、参数优化与可视化分析，"
+                        "适用于核反应数据评价、模型开发与科研分析等场景。"
+                    )
                 ],
-                style={"textAlign": "center"},
+                style={"fontSize": "1.1em", "color": "#333", "marginBottom": "1.2em"},
             ),
-            html.Br(),
             html.Div(
                 [
-                    dcc.Link("团队/项目介绍", href="/team", style={"margin": "0 10px"}),
-                    dcc.Link("联系邮箱", href="mailto:contact@example.com", style={"margin": "0 10px"}),
-                    dcc.Link("版本信息", href="/version", style={"margin": "0 10px"}),
+                    html.H3("主要功能", style={"fontSize": "1.16em", "marginBottom": "0.4em"}),
+                    html.Ul(
+                        [
+                            html.Li("多模型、多反应道实验与理论数据可视化对比"),
+                            html.Li("实验数据筛选、目标数据处理与误差分析"),
+                            html.Li("一键理论模型参数优化与协方差输出"),
+                            html.Li("支持批量核素处理和结果报告导出"),
+                        ],
+                        style={"fontSize": "1em", "marginLeft": "1.3em"},
+                    ),
                 ],
-                style={"textAlign": "center"},
+                style={"marginBottom": "1.2em"},
             ),
-        ]
+            html.Div(
+                [
+                    dcc.Link(
+                        html.Button("进入核素选择", style={"padding": "12px 36px", "fontSize": "1.05em"}),
+                        href="/nuclide",
+                    ),
+                    dcc.Link(
+                        html.Button(
+                            "功能说明",
+                            style={"marginLeft": "18px", "padding": "12px 32px", "fontSize": "1.01em"},
+                        ),
+                        href="/help",
+                    ),
+                ],
+                style={"marginBottom": "2em", "marginTop": "0.5em"},
+            ),
+            html.Div(
+                [
+                    html.P(
+                        "技术支持：XXX团队 | 联系方式：contact@xxxx.org",
+                        style={"fontSize": "0.98em", "color": "#777"},
+                    ),
+                    html.P(
+                        "版本 v1.0.0 | 引用本平台请注明出处",
+                        style={"fontSize": "0.98em", "color": "#bbb"},
+                    ),
+                ],
+                style={"marginTop": "2.5em"},
+            ),
+        ],
     )
 
     nuclide_page = html.Div([
