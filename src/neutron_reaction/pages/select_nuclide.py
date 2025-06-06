@@ -3,8 +3,14 @@
 from neutron_reaction.data.nuclides import generate_nuclide_data
 
 
-def _create_figure():
-    """Return a Plotly figure representing a placeholder nuclide chart."""
+def _create_figure(selected=None):
+    """Return a Plotly figure representing a placeholder nuclide chart.
+
+    Parameters
+    ----------
+    selected : list[str] | None
+        Labels of nuclides to highlight in the chart.
+    """
     from plotly import graph_objs as go
 
     data = generate_nuclide_data()
@@ -28,6 +34,14 @@ def _create_figure():
         dragmode="select",
         height=600,
     )
+
+    if selected:
+        indices = [i for i, lbl in enumerate(labels) if lbl in selected]
+        fig.update_traces(
+            selectedpoints=indices,
+            selected=dict(marker=dict(color="red", size=8)),
+            unselected=dict(marker=dict(opacity=0.3)),
+        )
     return fig
 
 
@@ -64,4 +78,8 @@ def register_callbacks(app):
         if not data:
             return "未选择核素"
         return html.Ul([html.Li(item) for item in data])
+
+    @app.callback(Output("nuclide-chart", "figure"), Input("selected-nuclides", "data"))
+    def _highlight_selected(data):
+        return _create_figure(data)
 
