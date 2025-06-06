@@ -18,10 +18,11 @@ def _create_figure(selected=None):
     scatter = go.Scatter(
         x=[d["N"] for d in data],
         y=[d["Z"] for d in data],
-        mode="markers",
-        text=[d["label"] for d in data],
+        mode="markers+text",
+        text=[d["symbol"] for d in data],
         customdata=data,
-        marker=dict(size=6, color="#1f77b4"),
+        marker=dict(size=18, color="cornflowerblue", symbol="square"),
+        textposition="middle center",
         hovertemplate="N=%{x}<br>Z=%{y}<br>%{customdata[symbol]}-%{customdata[A]}<extra></extra>",
     )
 
@@ -42,7 +43,7 @@ def _create_figure(selected=None):
         ]
         fig.update_traces(
             selectedpoints=indices,
-            selected=dict(marker=dict(color="red", size=8)),
+            selected=dict(marker=dict(color="orange", size=20)),
             unselected=dict(marker=dict(opacity=0.3)),
         )
     return fig
@@ -65,16 +66,24 @@ def layout():
 
 def register_callbacks(app):
     """Register callbacks for the nuclide selection page."""
-    from dash.dependencies import Input, Output
+    from dash.dependencies import Input, Output, State
     from dash import html
 
     @app.callback(
-        Output("selected-nuclides", "data"), Input("nuclide-chart", "selectedData")
+        Output("selected-nuclides", "data"),
+        Input("nuclide-chart", "selectedData"),
+        Input("nuclide-chart", "clickData"),
+        State("selected-nuclides", "data"),
     )
-    def _store_selection(selected):
+    def _store_selection(selected, clicked, current):
+        current = current or []
         if selected and "points" in selected:
-            return [p["customdata"] for p in selected["points"]]
-        return []
+            current = [p["customdata"] for p in selected["points"]]
+        if clicked and "points" in clicked:
+            item = clicked["points"][0]["customdata"]
+            if item not in current:
+                current.append(item)
+        return current
 
     @app.callback(Output("nuclide-output", "children"), Input("selected-nuclides", "data"))
     def _display_selected(data):

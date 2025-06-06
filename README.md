@@ -7,7 +7,8 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Separate modules for UI components and pages
 - Basic test structure using `pytest`
 - Nuclide selection page displays an interactive N–Z chart
-  where selected nuclides are highlighted and listed
+  where each nuclide is drawn as a colored block. Selected nuclides
+  are highlighted and listed beneath the chart
 
 ## Getting Started
 
