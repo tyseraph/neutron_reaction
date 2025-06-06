@@ -6,7 +6,8 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Interactive web application with a multi-step workflow
 - Separate modules for UI components and pages
 - Basic test structure using `pytest`
-- Nuclide selection page shows an N–Z chart where selected nuclides are highlighted
+- Nuclide selection page displays an interactive N–Z chart
+  where selected nuclides are highlighted and listed
 
 ## Getting Started
 
@@ -19,7 +20,7 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 python -m neutron_reaction.app
 ```
 
-The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page. All modules now use absolute imports (e.g. `from neutron_reaction.layout import serve_layout`) to avoid issues when the application is executed directly or as a module.
+The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page. The nuclide page renders a Plotly N–Z chart that supports click and box selection of nuclides. Selected items are listed beneath the chart and highlighted. All modules now use absolute imports (e.g. `from neutron_reaction.layout import serve_layout`) to avoid issues when the application is executed directly or as a module.
 
 ## Directory Structure
 

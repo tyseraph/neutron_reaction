@@ -1,30 +1,28 @@
-"""Nuclide selection page with a simple nuclide chart."""
+"""Nuclide selection page with an interactive nuclide chart."""
 
 from neutron_reaction.data.nuclides import generate_nuclide_data
 
 
 def _create_figure(selected=None):
-    """Return a Plotly figure representing a placeholder nuclide chart.
+    """Return a Plotly N–Z chart.
 
     Parameters
     ----------
-    selected : list[str] | None
-        Labels of nuclides to highlight in the chart.
+    selected : list[dict] | None
+        Nuclide dictionaries to highlight in the chart.
     """
     from plotly import graph_objs as go
 
     data = generate_nuclide_data()
-    z_vals = [d["Z"] for d in data]
-    n_vals = [d["N"] for d in data]
-    labels = [d["label"] for d in data]
 
     scatter = go.Scatter(
-        x=n_vals,
-        y=z_vals,
+        x=[d["N"] for d in data],
+        y=[d["Z"] for d in data],
         mode="markers",
-        text=labels,
-        customdata=labels,
+        text=[d["label"] for d in data],
+        customdata=data,
         marker=dict(size=6, color="#1f77b4"),
+        hovertemplate="N=%{x}<br>Z=%{y}<br>%{customdata[symbol]}-%{customdata[A]}<extra></extra>",
     )
 
     fig = go.Figure(scatter)
@@ -36,7 +34,12 @@ def _create_figure(selected=None):
     )
 
     if selected:
-        indices = [i for i, lbl in enumerate(labels) if lbl in selected]
+        labels = [d["label"] for d in data]
+        indices = [
+            i
+            for i, lbl in enumerate(labels)
+            if any(lbl == s.get("label") for s in selected)
+        ]
         fig.update_traces(
             selectedpoints=indices,
             selected=dict(marker=dict(color="red", size=8)),
@@ -77,7 +80,8 @@ def register_callbacks(app):
     def _display_selected(data):
         if not data:
             return "未选择核素"
-        return html.Ul([html.Li(item) for item in data])
+        items = [f"{d['symbol']}-{d['A']} (Z={d['Z']}, N={d['N']})" for d in data]
+        return html.Ul([html.Li(item) for item in items])
 
     @app.callback(Output("nuclide-chart", "figure"), Input("selected-nuclides", "data"))
     def _highlight_selected(data):
