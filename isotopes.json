@@ -1,0 +1,8 @@
+[
+  {"symbol": "H", "mass_number": 1, "name": "Hydrogen-1"},
+  {"symbol": "H", "mass_number": 2, "name": "Deuterium"},
+  {"symbol": "H", "mass_number": 3, "name": "Tritium"},
+  {"symbol": "He", "mass_number": 4, "name": "Helium-4"},
+  {"symbol": "C", "mass_number": 12, "name": "Carbon-12"},
+  {"symbol": "U", "mass_number": 235, "name": "Uranium-235"}
+]

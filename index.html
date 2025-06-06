@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Isotope Selector</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; }
+select { width: 300px; padding: 5px; }
+</style>
+</head>
+<body>
+<h1>Select an Isotope</h1>
+<select id="isotope-select"></select>
+
+<script>
+async function loadIsotopes() {
+  const response = await fetch('isotopes.json');
+  const isotopes = await response.json();
+  const select = document.getElementById('isotope-select');
+  isotopes.forEach(iso => {
+    const option = document.createElement('option');
+    option.value = `${iso.symbol}-${iso.mass_number}`;
+    option.textContent = `${iso.symbol}-${iso.mass_number} (${iso.name})`;
+    select.appendChild(option);
+  });
+}
+
+loadIsotopes();
+</script>
+</body>
+</html>
