@@ -57,9 +57,14 @@ def layout():
         [
             html.H1("核素选择"),
             html.A(
-                "NUBASE 数据表", 
+                "NUBASE 数据表",
                 href="https://www-nds.iaea.org/relnsd/nubase/nubase_min.html",
                 target="_blank",
+                style={"marginRight": "1rem"},
+            ),
+            dcc.Link(
+                "查看说明",
+                href="/nubase",
                 style={"marginRight": "1rem"},
             ),
             dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),

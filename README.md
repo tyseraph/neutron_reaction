@@ -10,7 +10,8 @@ This repository aims to build an interactive nuclear data evaluation platform ba
   where each nuclide is drawn as a colored block. Selected nuclides
   are highlighted and listed beneath the chart. The page also provides
   a link to the [IAEA NUBASE](https://www-nds.iaea.org/relnsd/nubase/nubase_min.html)
-  table for reference when picking nuclides
+  table for reference when picking nuclides, with an internal page providing
+  further instructions
 
 ## Getting Started
 
@@ -31,7 +32,7 @@ The application opens with a page titled `核数据智能评价平台` describin
   - `app.py` – application entry point
   - `layout.py` – top level layout including sidebar and page container
   - `component/` – reusable UI components (e.g., sidebar)
-  - `pages/` – individual page layouts such as `home` and `select_nuclide`
+  - `pages/` – individual page layouts such as `home`, `select_nuclide`, and `nubase`
 - `tests/` – unit tests
 
 ## License
