@@ -23,6 +23,8 @@ def create_dash_app():
             return select_nuclide.layout()
         return home.layout()
 
+    select_nuclide.register_callbacks(app)
+
     return app
 
 
