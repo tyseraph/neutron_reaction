@@ -56,6 +56,12 @@ def layout():
     return html.Div(
         [
             html.H1("核素选择"),
+            html.A(
+                "NUBASE 数据表", 
+                href="https://www-nds.iaea.org/relnsd/nubase/nubase_min.html",
+                target="_blank",
+                style={"marginRight": "1rem"},
+            ),
             dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),
             dcc.Graph(id="nuclide-chart", figure=_create_figure()),
             dcc.Store(id="selected-nuclides"),
