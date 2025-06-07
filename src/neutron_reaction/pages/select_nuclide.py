@@ -1,6 +1,6 @@
 """Nuclide selection page embedding the NUBASE table."""
 
-import os
+from pathlib import Path
 
 try:  # Optional imports so tests pass without dependencies
     import pandas as pd
@@ -10,9 +10,7 @@ except Exception:  # pragma: no cover - used when dependencies missing
     BeautifulSoup = None
 
 # Path to the bundled NUBASE HTML table
-HTML_PATH = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html")
-)
+HTML_PATH = Path(__file__).resolve().parent.parent / "data" / "nubase.html"
 
 
 from typing import Any
