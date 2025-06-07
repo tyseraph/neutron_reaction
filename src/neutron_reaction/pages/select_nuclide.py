@@ -1,4 +1,4 @@
-"""Nuclide selection page showing a local NUBASE table."""
+"""Nuclide selection page embedding the NUBASE table."""
 
 import os
 
@@ -11,11 +11,18 @@ except Exception:  # pragma: no cover - used when dependencies missing
 
 # Path to the bundled NUBASE HTML table
 HTML_PATH = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase_min.html")
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html")
 )
 
 
 from typing import Any
+
+# Dropdown fallback when NUBASE cannot be parsed
+MANUAL_OPTIONS = [
+    {"label": "H-1", "value": "H-1"},
+    {"label": "He-4", "value": "He-4"},
+    {"label": "Na-23", "value": "Na-23"},
+]
 
 
 def parse_nubase_html(html_file: str) -> Any:
@@ -49,19 +56,28 @@ except Exception:  # pragma: no cover - handled gracefully during tests
 
 def layout():
     """Return the nuclide selection page layout."""
-    from dash import html, dcc
-
-    with open(HTML_PATH, "r", encoding="utf-8") as f:
-        src_doc = f.read()
+    from dash import html, dcc, dash_table
 
     if NUBASE_DF is None:
+        table = html.P("缺少 pandas 或 BeautifulSoup，无法加载 NUBASE 表")
         dropdown = dcc.Dropdown(
-            options=[],
-            placeholder="NUBASE 数据表需要 pandas 和 BeautifulSoup 支持",
             id="nuclide-dropdown",
+            options=MANUAL_OPTIONS,
+            placeholder="NUBASE 表不可用，选择示例核素",
             multi=True,
         )
     else:
+        table = dash_table.DataTable(
+            id="nuclide-table",
+            columns=[{"name": c, "id": c} for c in NUBASE_DF.columns],
+            data=NUBASE_DF.to_dict("records"),
+            filter_action="native",
+            sort_action="native",
+            page_size=100,
+            row_selectable="single",
+            style_table={"overflowX": "auto", "maxHeight": "800px", "overflowY": "auto"},
+            style_cell={"fontSize": "12px", "textAlign": "center", "maxWidth": "200px"},
+        )
         dropdown = dcc.Dropdown(
             id="nuclide-dropdown",
             options=[
@@ -74,18 +90,11 @@ def layout():
 
     return html.Div(
         [
-            html.H1("核素选择"),
-            dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),
-            html.Iframe(
-                srcDoc=src_doc,
-                style={"width": "100%", "height": "800px", "border": "none"},
-            ),
+            html.H3("核素选取"),
+            table,
             dropdown,
-            html.Div(
-                "请选择一个核素",
-                id="nuclide-selected",
-                style={"fontWeight": "bold", "marginTop": "1rem"},
-            ),
+            html.Br(),
+            html.Div("请选择一个核素", id="nuclide-selected", style={"fontWeight": "bold"}),
         ]
     )
 
@@ -99,12 +108,18 @@ def register_callbacks(app):
         Input("nuclide-dropdown", "value"),
     )
     def _show_dropdown_selection(value):
-        if value and NUBASE_DF is not None:
-            # When multi=True, value may be a list
+        if not value:
+            return "请选择一个核素"
+
+        if NUBASE_DF is not None:
             if not isinstance(value, list):
                 value = [value]
             rows = [NUBASE_DF.iloc[v] for v in value]
             labels = [f"{i}-{row['Nuclide']}" for i, row in zip(value, rows)]
             return "已选择：" + ", ".join(labels)
-        return "请选择一个核素"
+
+        # Fallback when NUBASE table is unavailable
+        if not isinstance(value, list):
+            value = [value]
+        return "已选择：" + ", ".join(value)
 
