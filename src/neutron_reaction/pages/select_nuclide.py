@@ -10,59 +10,32 @@ except Exception:  # pragma: no cover - used when dependencies missing
     BeautifulSoup = None
 
 # Path to the bundled NUBASE HTML table
-HTML_PATH = Path(__file__).resolve().parent.parent / "data" / "nubase_min.html"
+    from dash import html, dash_table
+        return html.Div([
+            html.H3("核素选取"),
+            html.P("缺少 pandas 或 BeautifulSoup，无法加载 NUBASE 表"),
+        ])
 
+    table = dash_table.DataTable(
+        id="nuclide-table",
+        columns=[{"name": c, "id": c} for c in NUBASE_DF.columns],
+        data=NUBASE_DF.to_dict("records"),
+        filter_action="native",
+        sort_action="native",
+        page_size=100,
+        row_selectable="single",
+        style_table={"overflowX": "auto", "maxHeight": "800px", "overflowY": "auto"},
+        style_cell={"fontSize": "12px", "textAlign": "center", "maxWidth": "200px"},
+    )
+    if NUBASE_DF is None:
+        return
 
-from typing import Any
-
-# Dropdown fallback when NUBASE cannot be parsed
-MANUAL_OPTIONS = [
-    {"label": "H-1", "value": "H-1"},
-    {"label": "He-4", "value": "He-4"},
-    {"label": "Na-23", "value": "Na-23"},
-]
-
-
-def parse_nubase_html(html_file: str) -> Any:
-    """Parse the local NUBASE HTML and return it as a DataFrame.
-
-    Raises
-    ------
-    ImportError
-        If pandas or BeautifulSoup are not available.
-    """
-    if pd is None or BeautifulSoup is None:
-        raise ImportError("pandas and BeautifulSoup are required to parse NUBASE")
-
-    with open(html_file, "r", encoding="utf-8") as f:
-        soup = BeautifulSoup(f, "html.parser")
-    table = soup.find("table")
-    headers = [th.get_text(strip=True) for th in table.find_all("th")]
-    rows = []
-    for tr in table.find_all("tr")[1:]:
-        cells = [td.get_text(strip=True) for td in tr.find_all("td")]
-        if len(cells) == len(headers):
-            rows.append(cells)
-    return pd.DataFrame(rows, columns=headers)
-
-
-try:  # May fail if dependencies are missing
-    NUBASE_DF = parse_nubase_html(HTML_PATH)
-except Exception:  # pragma: no cover - handled gracefully during tests
-    NUBASE_DF = None
-
-
-def layout():
-    """Return the nuclide selection page layout."""
-    from dash import html, dcc
-
-    # Load the local NUBASE HTML content to display it in iframe
-    with open(HTML_PATH, "r", encoding="utf-8") as f:
-        src_doc = f.read()
-
-    # Option 1: Dynamically generate dropdown from NUBASE_DF (if available)
-    if NUBASE_DF is None or "Nuclide" not in NUBASE_DF.columns:
-        dropdown = dcc.Dropdown(
+        Input("nuclide-table", "selected_rows"),
+    def _show_selected_row(selected_rows):
+        if selected_rows:
+            row = NUBASE_DF.iloc[selected_rows[0]]
+            return f"已选择：{row.to_dict()}"
+        return "请选择一个核素"
             options=[],
             placeholder="NUBASE 数据表需要 pandas 和 BeautifulSoup 支持",
             id="nuclide-dropdown",
