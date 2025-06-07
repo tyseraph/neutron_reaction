@@ -1,26 +1,26 @@
-"""NUBASE reference page."""
+"""Local NUBASE reference page."""
 
-NUBASE_URL = "https://www-nds.iaea.org/relnsd/nubase/nubase_min.html"
+import os
+
+HTML_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html")
+)
 
 
 def layout():
     """Return the layout for the NUBASE information page."""
     from dash import html
+
+    with open(HTML_PATH, "r", encoding="utf-8") as f:
+        src_doc = f.read()
+
     return html.Div(
         [
             html.H1("NUBASE 数据表"),
-            html.P(
-                [
-                    "该页面链接至 IAEA 发布的 ",
-                    html.A("NUBASE", href=NUBASE_URL, target="_blank"),
-                    " 表，可作为核素选择与参考。",
-                ]
-            ),
-            html.Ul(
-                [
-                    html.Li("点击上方链接在新标签页打开 NUBASE 表"),
-                    html.Li("在左侧导航返回其他页面"),
-                ]
+            html.P("下面展示的是本地存储的 NUBASE 表，可供参考。"),
+            html.Iframe(
+                srcDoc=src_doc,
+                style={"width": "100%", "height": "800px", "border": "none"},
             ),
         ]
     )
