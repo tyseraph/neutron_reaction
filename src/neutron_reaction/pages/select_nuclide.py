@@ -49,27 +49,19 @@ except Exception:  # pragma: no cover - handled gracefully during tests
 
 def layout():
     """Return the nuclide selection page layout."""
-    from dash import html, dcc, dash_table
+    from dash import html, dcc
+
+    with open(HTML_PATH, "r", encoding="utf-8") as f:
+        src_doc = f.read()
 
     if NUBASE_DF is None:
-        table = html.Div("NUBASE 数据表需要 pandas 和 BeautifulSoup 支持")
         dropdown = dcc.Dropdown(
             options=[],
-            placeholder="未能加载数据",
+            placeholder="NUBASE 数据表需要 pandas 和 BeautifulSoup 支持",
             id="nuclide-dropdown",
             multi=True,
         )
     else:
-        table = dash_table.DataTable(
-            id="nuclide-table",
-            columns=[{"name": c, "id": c} for c in NUBASE_DF.columns],
-            data=NUBASE_DF.to_dict("records"),
-            filter_action="native",
-            sort_action="native",
-            page_size=50,
-            style_table={"overflowX": "auto", "maxHeight": "600px", "overflowY": "auto"},
-            style_cell={"fontSize": "12px", "textAlign": "center"},
-        )
         dropdown = dcc.Dropdown(
             id="nuclide-dropdown",
             options=[
@@ -84,7 +76,10 @@ def layout():
         [
             html.H1("核素选择"),
             dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),
-            table,
+            html.Iframe(
+                srcDoc=src_doc,
+                style={"width": "100%", "height": "800px", "border": "none"},
+            ),
             dropdown,
             html.Div(
                 "请选择一个核素",
