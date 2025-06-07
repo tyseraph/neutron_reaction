@@ -16,6 +16,10 @@ This repository aims to build an interactive nuclear data evaluation platform ba
    ```bash
    pip install -r requirements.txt
    ```
+   The nuclide table also requires `pandas` and `beautifulsoup4`:
+   ```bash
+   pip install pandas beautifulsoup4
+   ```
 2. Run the Dash application from the project root so that imports resolve correctly:
 ```bash
 python -m neutron_reaction.app
