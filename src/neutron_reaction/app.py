@@ -1,7 +1,7 @@
 """Dash application for the nuclear data evaluation platform."""
 
 from neutron_reaction.layout import serve_layout
-from neutron_reaction.pages import home, select_nuclide, nubase
+from neutron_reaction.pages import home, select_nuclide
 
 
 def interactive_message() -> str:
@@ -21,8 +21,6 @@ def create_dash_app():
     def display_page(pathname: str):
         if pathname == "/select-nuclide":
             return select_nuclide.layout()
-        if pathname == "/nubase":
-            return nubase.layout()
         return home.layout()
 
     select_nuclide.register_callbacks(app)

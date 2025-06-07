@@ -6,13 +6,9 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Interactive web application with a multi-step workflow
 - Separate modules for UI components and pages
 - Basic test structure using `pytest`
-- Nuclide selection page displays an interactive N–Z chart
-  where each nuclide is drawn as a colored block. Selected nuclides
-  are highlighted and listed beneath the chart. A local copy of the
-  NUBASE table is parsed and shown on the same page so you can browse
-  it directly. A dropdown beneath the table lets you select a nuclide
-  for further study. An internal help page also provides brief
-  instructions.
+- Nuclide selection page shows a local copy of the NUBASE table
+  (`nubase_min.html`). A multi-select dropdown underneath lists entries
+  like `12-Na-23` so you can choose one or more nuclides for study.
 
 ## Getting Started
 
@@ -33,7 +29,7 @@ The application opens with a page titled `核数据智能评价平台` describin
   - `app.py` – application entry point
   - `layout.py` – top level layout including sidebar and page container
   - `component/` – reusable UI components (e.g., sidebar)
-  - `pages/` – individual page layouts such as `home`, `select_nuclide`, and `nubase`
+  - `pages/` – individual page layouts such as `home` and `select_nuclide`
 - `tests/` – unit tests
 
 ## License
