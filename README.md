@@ -6,9 +6,10 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Interactive web application with a multi-step workflow
 - Separate modules for UI components and pages
 - Basic test structure using `pytest`
-- Nuclide selection page embeds the local `nubase.html` table in an
-  interactive grid. A multi-select dropdown is populated from this table
-  so you can choose one or more nuclides for study.
+- Nuclide selection page embeds the local `nubase.html` table (stored in
+  `src/neutron_reaction/data/nubase.html`) inside an interactive grid.
+  A multi-select dropdown is populated from this table so you can choose
+  one or more nuclides for study.
 
 ## Getting Started
 
