@@ -9,9 +9,10 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Nuclide selection page displays an interactive N–Z chart
   where each nuclide is drawn as a colored block. Selected nuclides
   are highlighted and listed beneath the chart. A local copy of the
-  NUBASE table is parsed and shown on the same page so you can pick
-  nuclides directly without opening an external site. An internal
-  help page also provides brief instructions.
+  NUBASE table is parsed and shown on the same page so you can browse
+  it directly. A dropdown beneath the table lets you select a nuclide
+  for further study. An internal help page also provides brief
+  instructions.
 
 ## Getting Started
 

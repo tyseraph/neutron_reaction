@@ -100,6 +100,7 @@ def layout():
 
     if NUBASE_DF is None:
         table = html.Div("NUBASE 数据表需要 pandas 和 BeautifulSoup 支持")
+        dropdown = dcc.Dropdown(options=[], placeholder="未能加载数据", id="nuclide-dropdown")
     else:
         table = dash_table.DataTable(
             id="nuclide-table",
@@ -108,9 +109,13 @@ def layout():
             filter_action="native",
             sort_action="native",
             page_size=50,
-            row_selectable="single",
             style_table={"overflowX": "auto", "maxHeight": "600px", "overflowY": "auto"},
             style_cell={"fontSize": "12px", "textAlign": "center"},
+        )
+        dropdown = dcc.Dropdown(
+            id="nuclide-dropdown",
+            options=[{"label": row["Nuclide"], "value": idx} for idx, row in NUBASE_DF.iterrows()],
+            placeholder="选择一个核素",
         )
 
     return html.Div(
@@ -120,6 +125,7 @@ def layout():
             dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),
             dcc.Graph(id="nuclide-chart", figure=_create_figure()),
             table,
+            dropdown,
             html.Div("请选择一个核素", id="nuclide-selected", style={"fontWeight": "bold", "marginTop": "1rem"}),
             dcc.Store(id="selected-nuclides"),
             html.Div(id="nuclide-output"),
@@ -161,11 +167,11 @@ def register_callbacks(app):
 
     @app.callback(
         Output("nuclide-selected", "children"),
-        Input("nuclide-table", "selected_rows"),
+        Input("nuclide-dropdown", "value"),
     )
-    def _show_table_selection(rows):
-        if rows and NUBASE_DF is not None:
-            row = NUBASE_DF.iloc[rows[0]]
+    def _show_dropdown_selection(value):
+        if value is not None and NUBASE_DF is not None:
+            row = NUBASE_DF.iloc[value]
             return f"已选择：{row.to_dict()}"
         return "请选择一个核素"
 
