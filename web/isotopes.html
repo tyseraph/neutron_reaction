@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Isotope Selection</title>
+  <script>
+    async function loadIsotopes() {
+      const response = await fetch('isotopes.json');
+      const isotopes = await response.json();
+      const list = document.getElementById('isotope-list');
+      isotopes.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        list.appendChild(li);
+      });
+    }
+    window.addEventListener('DOMContentLoaded', loadIsotopes);
+  </script>
+</head>
+<body>
+  <h1>Select an Isotope</h1>
+  <ul id="isotope-list"></ul>
+</body>
+</html>
