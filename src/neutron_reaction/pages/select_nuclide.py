@@ -1,52 +1,56 @@
-"""Nuclide selection page based on a configurable list of nuclides."""
+"""Nuclide selection page displaying the local NUBASE table."""
 
-from pathlib import Path
+from __future__ import annotations
 
-try:  # Optional import so tests pass even without pandas
+import os
+
+try:  # Optional imports so tests pass if dependencies are missing
     import pandas as pd
-except Exception:  # pragma: no cover - used when dependency missing
+    from bs4 import BeautifulSoup
+except Exception:  # pragma: no cover - handled when packages absent
     pd = None
+    BeautifulSoup = None
 
-from neutron_reaction.data.nuclides import generate_nuclide_data
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-ALLOWED_FILE = DATA_DIR / "allowed_nuclides.txt"
-def _load_allowed_labels() -> list[str]:
-    """Return the list of nuclide labels allowed for selection."""
-    try:
-        with open(ALLOWED_FILE, "r", encoding="utf-8") as f:
-            return [line.strip() for line in f if line.strip()]
-    except FileNotFoundError:  # pragma: no cover - default to empty list
-        return []
+# Path to the bundled NUBASE HTML file
+HTML_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html")
+)
+def parse_nubase_html(html_file: str) -> "pd.DataFrame":
+    """Parse the local NUBASE HTML table into a DataFrame."""
+    if pd is None or BeautifulSoup is None:
+        raise ImportError("pandas and BeautifulSoup are required to parse NUBASE")
+    with open(html_file, "r", encoding="utf-8") as f:
+        soup = BeautifulSoup(f, "html.parser")
+
+    table = soup.find("table")
+    headers = [th.get_text(strip=True) for th in table.find_all("th")]
+    rows = []
+    for tr in table.find_all("tr")[1:]:  # skip header row
+        cells = [td.get_text(strip=True) for td in tr.find_all("td")]
+        if len(cells) == len(headers):
+            rows.append(cells)
+
+    return pd.DataFrame(rows, columns=headers)
 def _load_dataframe() -> "pd.DataFrame | None":
-    if pd is None:
+    try:
+        return parse_nubase_html(HTML_PATH)
+    except Exception:  # pragma: no cover - show message instead
         return None
-    df = pd.DataFrame(generate_nuclide_data())
-    allowed = _load_allowed_labels()
-    if allowed:
-        df = df[df["label"].isin(allowed)]
-    return df.reset_index(drop=True)
-NUCLIDE_DF = _load_dataframe()
     if NUCLIDE_DF is None:
-            html.P("缺少 pandas，无法加载核素列表"),
+            html.P("无法加载 NUBASE 表，请安装 pandas 和 beautifulsoup4"),
         columns=[{"name": c, "id": c} for c in NUCLIDE_DF.columns],
         data=NUCLIDE_DF.to_dict("records"),
-        page_size=50,
-    if NUCLIDE_DF is None:
-            row = NUCLIDE_DF.iloc[selected_rows[0]]
-            return f"已选择：{row['label']}"
-            id="nuclide-dropdown",
-            options=[
-                {"label": f"{row['Nuclide']}", "value": idx}
-                for idx, row in NUBASE_DF.iterrows()
-            ],
-            placeholder="选择核素，可多选",
-            multi=True,
-        )
-
-    return html.Div(
-        [
-            html.H1("核素选择"),
-            dcc.Link("返回首页", href="/", style={"marginRight": "1rem"}),
+        page_size=100,
+    return html.Div([
+        html.H3("核素选取"),
+        table,
+        html.Br(),
+        html.Div("请选择一个核素", id="nuclide-selected", style={"fontWeight": "bold"}),
+    ])
+    """Register callbacks for this page."""
+    @app.callback(Output("nuclide-selected", "children"), Input("nuclide-table", "selected_rows"))
+    def _show_selected_nuclide(selected_rows):
+            return f"已选择：{row.to_dict()}"
             html.Iframe(
                 srcDoc=src_doc,
                 style={"width": "100%", "height": "800px", "border": "none"},
