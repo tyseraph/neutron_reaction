@@ -13,7 +13,9 @@ except Exception:  # pragma: no cover - handled when packages absent
 
 # Path to the bundled NUBASE HTML file
 HTML_PATH = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html")
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "data", "nubase.html"
+    )
 )
 def parse_nubase_html(html_file: str) -> "pd.DataFrame":
     """Parse the local NUBASE HTML table into a DataFrame."""
@@ -37,18 +39,26 @@ def _load_dataframe() -> "pd.DataFrame | None":
     except Exception:  # pragma: no cover - show message instead
         return None
     if NUCLIDE_DF is None:
-            html.P("无法加载 NUBASE 表，请安装 pandas 和 beautifulsoup4"),
-        columns=[{"name": c, "id": c} for c in NUCLIDE_DF.columns],
-        data=NUCLIDE_DF.to_dict("records"),
-        page_size=100,
-    return html.Div([
-        html.H3("核素选取"),
-        table,
-        html.Br(),
-        html.Div("请选择一个核素", id="nuclide-selected", style={"fontWeight": "bold"}),
-    ])
+        return html.Div(
+            [
+                html.H3("核素选取"),
+                html.P("无法加载 NUBASE 表，请安装 pandas 和 beautifulsoup4"),
+            ]
+        )
+    return html.Div(
+        [
+            html.H3("核素选取"),
+            table,
+            html.Br(),
+            html.Div(
+                "请选择一个核素", id="nuclide-selected", style={"fontWeight": "bold"}
+            ),
+        ]
+    )
     """Register callbacks for this page."""
-    @app.callback(Output("nuclide-selected", "children"), Input("nuclide-table", "selected_rows"))
+    @app.callback(
+        Output("nuclide-selected", "children"), Input("nuclide-table", "selected_rows")
+    )
     def _show_selected_nuclide(selected_rows):
             return f"已选择：{row.to_dict()}"
             html.Iframe(
