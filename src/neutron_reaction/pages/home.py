@@ -44,6 +44,22 @@ def layout():
             ),
             html.Div(
                 [
+                    html.P(
+                        [
+                            "更多核素性质可在 ",
+                            html.A(
+                                "NUBASE",
+                                href="https://www-nds.iaea.org/nubase/",
+                                target="_blank",
+                            ),
+                            " 查询。",
+                        ]
+                    )
+                ],
+                style={"fontSize": "1em", "marginBottom": "1.2em"},
+            ),
+            html.Div(
+                [
                     dcc.Link(
                         html.Button(
                             "进入核素选择",

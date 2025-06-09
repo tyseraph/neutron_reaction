@@ -6,9 +6,11 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 - Interactive web application with a multi-step workflow
 - Separate modules for UI components and pages
 - Basic test structure using `pytest`
-- Nuclide selection page embeds the local `nubase.html` table (stored in
-  `src/neutron_reaction/data/nubase.html`) inside an interactive grid.
-  Select a row directly from this table to choose a nuclide for study.
+- Home page links to the online [NUBASE](https://www-nds.iaea.org/nubase/) table
+  so you can look up properties for each nuclide.
+- Nuclide selection page reads `allowed_nuclides.txt` to determine which entries
+  from the placeholder dataset are available for study. These nuclides are shown
+  in a `dash_table.DataTable` where you can select a single row.
 
 ## Getting Started
 
@@ -25,7 +27,7 @@ This repository aims to build an interactive nuclear data evaluation platform ba
 python -m neutron_reaction.app
 ```
 
-The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page. On that page the local NUBASE table is shown in a `dash_table.DataTable` where you can filter, sort and select a row to pick a nuclide. All modules now use absolute imports (e.g. `from neutron_reaction.layout import serve_layout`) to avoid issues when the application is executed directly or as a module.
+The application opens with a page titled `核数据智能评价平台` describing the project and linking to the nuclide selection page. The home page also provides a link to the official NUBASE database for browsing nuclide properties. On the selection page the list of available nuclides comes from `allowed_nuclides.txt` and is displayed in a `dash_table.DataTable` where you can choose one entry. All modules use absolute imports (e.g. `from neutron_reaction.layout import serve_layout`) to avoid issues when the application is executed directly or as a module.
 
 ## Directory Structure
 

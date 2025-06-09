@@ -1,48 +1,39 @@
-"""Nuclide selection page embedding the NUBASE table."""
+"""Nuclide selection page based on a configurable list of nuclides."""
 
 from pathlib import Path
 
-try:  # Optional imports so tests pass without dependencies
+try:  # Optional import so tests pass even without pandas
     import pandas as pd
-    from bs4 import BeautifulSoup
-except Exception:  # pragma: no cover - used when dependencies missing
+except Exception:  # pragma: no cover - used when dependency missing
     pd = None
-    BeautifulSoup = None
 
-# Path to the bundled NUBASE HTML table
-    from dash import html, dash_table
-        return html.Div([
-            html.H3("核素选取"),
-            html.P("缺少 pandas 或 BeautifulSoup，无法加载 NUBASE 表"),
-        ])
-
-    table = dash_table.DataTable(
-        id="nuclide-table",
-        columns=[{"name": c, "id": c} for c in NUBASE_DF.columns],
-        data=NUBASE_DF.to_dict("records"),
-        filter_action="native",
-        sort_action="native",
-        page_size=100,
-        row_selectable="single",
-        style_table={"overflowX": "auto", "maxHeight": "800px", "overflowY": "auto"},
-        style_cell={"fontSize": "12px", "textAlign": "center", "maxWidth": "200px"},
-    )
-    if NUBASE_DF is None:
-        return
-
-        Input("nuclide-table", "selected_rows"),
-    def _show_selected_row(selected_rows):
-        if selected_rows:
-            row = NUBASE_DF.iloc[selected_rows[0]]
-            return f"已选择：{row.to_dict()}"
-        return "请选择一个核素"
-            options=[],
-            placeholder="NUBASE 数据表需要 pandas 和 BeautifulSoup 支持",
-            id="nuclide-dropdown",
-            multi=True,
-        )
-    else:
-        dropdown = dcc.Dropdown(
+from neutron_reaction.data.nuclides import generate_nuclide_data
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+ALLOWED_FILE = DATA_DIR / "allowed_nuclides.txt"
+def _load_allowed_labels() -> list[str]:
+    """Return the list of nuclide labels allowed for selection."""
+    try:
+        with open(ALLOWED_FILE, "r", encoding="utf-8") as f:
+            return [line.strip() for line in f if line.strip()]
+    except FileNotFoundError:  # pragma: no cover - default to empty list
+        return []
+def _load_dataframe() -> "pd.DataFrame | None":
+    if pd is None:
+        return None
+    df = pd.DataFrame(generate_nuclide_data())
+    allowed = _load_allowed_labels()
+    if allowed:
+        df = df[df["label"].isin(allowed)]
+    return df.reset_index(drop=True)
+NUCLIDE_DF = _load_dataframe()
+    if NUCLIDE_DF is None:
+            html.P("缺少 pandas，无法加载核素列表"),
+        columns=[{"name": c, "id": c} for c in NUCLIDE_DF.columns],
+        data=NUCLIDE_DF.to_dict("records"),
+        page_size=50,
+    if NUCLIDE_DF is None:
+            row = NUCLIDE_DF.iloc[selected_rows[0]]
+            return f"已选择：{row['label']}"
             id="nuclide-dropdown",
             options=[
                 {"label": f"{row['Nuclide']}", "value": idx}
