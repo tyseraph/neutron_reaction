@@ -1,0 +1,22 @@
+/* assets/style.css */
+
+.model-box {
+    padding: 40px;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 30%;  /* 设置方块的宽度 */
+    height: 100px; /* 设置方块的高度 */
+    margin: 10px;
+    transition: background-color 0.3s ease;
+    display: inline-block; /* 横向排列 */
+}
+
+.model-box:hover {
+    background-color: #f0f0f0;  /* 方块悬停时的颜色 */
+}
+
+.model-box.selected {
+    background-color: #ADD8E6;  /* 选中时的颜色 */
+}
